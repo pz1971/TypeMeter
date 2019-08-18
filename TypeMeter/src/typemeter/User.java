@@ -5,6 +5,7 @@
  */
 package typemeter;
 
+import java.io.File;
 /**
  *
  * @author Parvez
@@ -15,5 +16,8 @@ public class User {
     User(String user_name, String password){
         this.user_name = user_name;
         this.password = password;
+        
+        
+        
     }
 }
