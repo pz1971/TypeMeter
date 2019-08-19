@@ -27,6 +27,7 @@ public class TypeMeter extends Application {
         stage.setTitle("TypeMeter");
         stage.getIcons().add(new Image("/Images/icon.png"));
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 

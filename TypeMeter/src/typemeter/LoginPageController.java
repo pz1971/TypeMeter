@@ -8,14 +8,20 @@ package typemeter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 /**
  *
@@ -24,7 +30,7 @@ import javafx.scene.control.TextArea;
 public class LoginPageController implements Initializable {
     
     @FXML
-    private TextArea userNameBox;
+    private TextField userNameBox;
     @FXML
     private PasswordField passwordBox;
     @FXML
@@ -54,20 +60,21 @@ public class LoginPageController implements Initializable {
             BufferedReader reader;
             boolean passwordMatched = false;
             try{
-                reader = new BufferedReader(new FileReader(pathToUser + "/" + userName + "/password.txt"));
+                reader = new BufferedReader(new FileReader(pathToUser + "/" + userName + "/password.txt")); // opens the file where the password is stored
                 if(reader.readLine().equals(pass)){
                     passwordMatched = true;
                 }
             }
-            catch(Exception e){
+            catch(IOException e){
                 System.out.println(e.toString());
             }
             
-            if(!passwordMatched){
+            if(!passwordMatched){       // password not matched
                 loginStatus.setText("Invalid user_name or password... Please Try again or register.");
             }
             else{
                 loginStatus.setText("Welcome!");
+                // home opens...
             }
         }
     }
@@ -75,11 +82,23 @@ public class LoginPageController implements Initializable {
     @FXML
     private void newUserButtonAction(ActionEvent event) {
         
+        try {       // new user registration form is being opened...
+            Stage st = new Stage();
+            Parent root = FXMLLoader.load(getClass().getResource("SignUpForm.fxml"));
+            Scene sc = new Scene(root);
+            st.setTitle("TypeMeter Sign up");
+            st.getIcons().add(new Image("/Images/icon.png"));
+            st.setScene(sc);
+            st.show();
+        }
+        catch(IOException e){
+            System.out.println(e.toString());
+        }
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
     
 }
