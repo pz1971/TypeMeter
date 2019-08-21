@@ -29,9 +29,9 @@
                         <Image url="@../Images/Logo.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="StartTypingButton" layoutX="42.0" layoutY="272.0" mnemonicParsing="false" onAction="#StartTypingButtonActon" prefHeight="29.0" prefWidth="107.0" text="Start Typing" AnchorPane.leftAnchor="42.0" AnchorPane.topAnchor="272.0" />
-                  <ProgressBar layoutX="42.0" layoutY="350.0" prefHeight="15.0" prefWidth="493.0" progress="0.0" AnchorPane.leftAnchor="42.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="350.0" />
-                  <TextArea layoutX="42.0" layoutY="375.0" prefHeight="124.0" prefWidth="493.0" wrapText="true" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="42.0" AnchorPane.rightAnchor="41.0">
+                  <Button fx:id="startTypingButton" layoutX="42.0" layoutY="272.0" mnemonicParsing="false" onAction="#startTypingButtonActon" prefHeight="29.0" prefWidth="107.0" text="Start Typing" AnchorPane.leftAnchor="42.0" AnchorPane.topAnchor="272.0" />
+                  <ProgressBar fx:id="pb" layoutX="42.0" layoutY="350.0" prefHeight="15.0" prefWidth="493.0" progress="0.0" AnchorPane.leftAnchor="42.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="350.0" />
+                  <TextArea fx:id="typeArea" layoutX="42.0" layoutY="375.0" prefHeight="124.0" prefWidth="493.0" wrapText="true" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="42.0" AnchorPane.rightAnchor="41.0">
                      <font>
                         <Font size="14.0" />
                      </font></TextArea>
