@@ -6,8 +6,10 @@
 package typemeter;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -35,6 +38,8 @@ public class LoginPageController implements Initializable {
     private PasswordField passwordBox;
     @FXML
     private Label loginStatus;
+    @FXML
+    private Button loginButton, newUserButton;
     
     @FXML
     private void loginButtonAction(ActionEvent event) {
@@ -73,8 +78,30 @@ public class LoginPageController implements Initializable {
                 loginStatus.setText("Invalid user_name or password... Please Try again or register.");
             }
             else{
-                loginStatus.setText("Welcome!");
                 // home opens...
+
+                try{
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(System.getProperty("user.dir") + "/src/CurrentUser/userName.txt"));
+                    writer.write(userName);     // saving the current user_name in a txt file
+                    writer.close();
+                    
+                    Stage st = new Stage();
+                    Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
+                    Scene sc = new Scene(root);
+                    st.setTitle("TypeMeter");
+                    st.getIcons().add(new Image("/Images/icon.png"));
+                    st.setScene(sc);
+                    st.show();          // open home window
+                    
+                    Stage stage = (Stage) loginButton.getScene().getWindow();
+                    stage.close();      // close current window
+                }
+                catch(IOException e){
+                    System.out.println(e.toString());
+                }
+                catch(Exception e){
+                    System.out.println(e.toString());
+                }
             }
         }
     }
