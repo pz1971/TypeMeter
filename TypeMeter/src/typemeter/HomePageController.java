@@ -56,6 +56,8 @@ public class HomePageController implements Initializable {
         text3.setText(script);  // remaining protion of the script not yet 'd been typed
         
         startTypingButton.setVisible(false);    // button disappears :D
+        typeArea.setEditable(true) ;            // enabled typing
+        
         correct = incorrect = 0;
         pb.setProgress(0.0) ;       // 0% has been typed
         typeArea.setText("");
@@ -63,6 +65,7 @@ public class HomePageController implements Initializable {
     
     private void endOfScript(){ // when user finishes typing the current script
         startTypingButton.setVisible(true);     // you can type again... :)
+        typeArea.setEditable(false) ;
         
         script = "";
         text1.setText("");
@@ -114,6 +117,7 @@ public class HomePageController implements Initializable {
         // TODO
         text1.setFill(Color.GREEN);
         text2.setFill(Color.RED);
+        typeArea.setEditable(false) ;
         
         typeArea.textProperty().addListener(new ChangeListener<String>() {
             @Override
