@@ -6,6 +6,7 @@
 package typemeter;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,7 +18,9 @@ import java.util.Random;
 public class ScriptGenerator {
     public String generate(){
         int idx = (new Random()).nextInt(31);
-        String filePath = ( System.getProperty("user.dir") + "/src/Scripts/" + Integer.toString(idx) + ".txt" );
+
+        String filePath = ( (new File("")).getAbsolutePath() + "/src/Scripts/" + Integer.toString(idx) + ".txt" );
+
         String ret = "";
         
         try{

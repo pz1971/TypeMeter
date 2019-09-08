@@ -18,7 +18,8 @@ public class User {
     
     User(String user_name, String password){
         
-        String pathToUser = System.getProperty("user.dir") + "/src/UsersFolder" ;
+        String pathToUser = (new File("")).getAbsolutePath() + "/src/UsersFolder" ;
+        
         File dir = new File(pathToUser + "/" + user_name);  // created a file for a user
         dir.mkdir();    // now that file is a directory
         try{
@@ -26,7 +27,7 @@ public class User {
             writer.write(password);     // store the password
             writer.close();
         }catch(IOException e){
-                System.out.println(e.toString());
+            System.out.println(e.toString());
         }
     }
     

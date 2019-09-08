@@ -46,7 +46,8 @@ public class LoginPageController implements Initializable {
         String userName = userNameBox.getText();
         String pass = passwordBox.getText();
         
-        String pathToUser = System.getProperty("user.dir") + "/src/UsersFolder" ;
+        String pathToUser = (new File("")).getAbsolutePath() + "/src/UsersFolder" ;
+        
         File dir = new File(pathToUser);     // project directory + the folder where users infos are recorded
         File [] listOfUsers = dir.listFiles();  // all the folders named on behalf of the userNames...
         

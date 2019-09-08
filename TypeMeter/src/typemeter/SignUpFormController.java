@@ -59,7 +59,8 @@ public class SignUpFormController implements Initializable {
         }
         
         if(allOk){
-            String pathToUser = System.getProperty("user.dir") + "/src/UsersFolder" ;
+            String pathToUser = (new File("")).getAbsolutePath() + "/src/UsersFolder" ;
+            
             File [] allUsers = (new File(pathToUser)).listFiles();
             
             for(File aUser : allUsers){     // iterate through all previous users record and check if this name has already been taken or not
