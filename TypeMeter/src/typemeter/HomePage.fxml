@@ -84,7 +84,7 @@
                       </TitledPane>
                     </panes>
                   </Accordion>
-                  <Label layoutX="14.0" layoutY="11.0" prefHeight="29.0" prefWidth="191.0" text="User_name" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="11.0">
+                  <Label fx:id="userNameFiled" layoutX="14.0" layoutY="11.0" prefHeight="29.0" prefWidth="191.0" text="User_name" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="11.0">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>

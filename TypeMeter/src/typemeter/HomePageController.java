@@ -5,6 +5,10 @@
  */
 package typemeter;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
@@ -38,10 +42,11 @@ public class HomePageController implements Initializable {
      * Initializes the controller class.
      */
     
-    private static final int STARTTIME = 0;
-    private Timeline timeline;
-    private final IntegerProperty timeSeconds = new SimpleIntegerProperty(STARTTIME);
+    private static final int STARTTIME = 0;     // timer always starts from 0 seconds... okay?!
+    private Timeline timeline;      // well, this is the timeline... um, that's it :D
+    private final IntegerProperty timeSeconds = new SimpleIntegerProperty(STARTTIME);   // I don't know what the hell is this, just stacksoverflow'ed it :P
     
+    int correctness[] = new int[1000] ;
     
     @FXML
     Text text1, text2, text3; // text1 = the portion already typed correctly, text2 = typed but not correct, text3 = not typed yet
@@ -62,7 +67,7 @@ public class HomePageController implements Initializable {
     TextField speedField, accuracyField;
     
     @FXML
-    Label timerField, timerLabel ;
+    Label timerField, timerLabel, userNameFiled ;
     
     String script;
     int correct = 0, incorrect = 0;
@@ -75,6 +80,7 @@ public class HomePageController implements Initializable {
     
     @FXML
     public void startTypingButtonActon(ActionEvent event){
+        
         script = (new ScriptGenerator()).generate();    // generates a random script
         text1.setText("");      // already typed correctly
         text2.setText("");      // typed but not correct
@@ -87,6 +93,9 @@ public class HomePageController implements Initializable {
         pb.setProgress(0.0) ;       // 0% has been typed
         typeArea.setText("");
         
+        speedField.setText("Speed(WPM): ");
+        accuracyField.setText("Accuracy: ") ;
+        
         // reset the timer
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), evt -> updateTime())); 
         timeline.setCycleCount(Animation.INDEFINITE); // repeat over and over again
@@ -98,15 +107,26 @@ public class HomePageController implements Initializable {
         startTypingButton.setVisible(true);     // you can type again... :)
         typeArea.setEditable(false) ;
         
-        script = "";
+        timeline.pause() ;  // pause the timeline :D
+        int mistake = 0 ;   // number of mistakes
+        
+        for(int i = 0 ; i < script.length() ; i++){
+            if(correctness[i] == 1){
+                mistake++ ;   // mistake found here
+                correctness[i] = 0 ;    // reset status of this index
+            }
+        }
+        
+        speedField.setText("Speed(WPM):        " + Integer.toString((int)Math.round(((double)script.length() / 4.7) / ( timeSeconds.get() / 60.0 ) )));
+        accuracyField.setText("Accuracy:        " + Integer.toString((int)Math.round(100.0 - ( (double)mistake / (double)script.length() * 100.0 ) )) + "%") ;
+        
+        script = "";        // all the text flows and script will be erased
         text1.setText("");
         text2.setText("");
         text3.setText("");
         
-        pb.setProgress(1.0);
-        correct = incorrect = 0;
-        
-        timeline.pause() ;
+        pb.setProgress(1.0);    // 100% progress achieved :D
+        correct = incorrect = 0;    // reset computation
     }
     
     private void calculate(String typed){
@@ -115,8 +135,11 @@ public class HomePageController implements Initializable {
             if(script.charAt(i) == typed.charAt(i)){
                 correct++;
             }
-            else
+            else{
+                correctness[i] = 1 ;    // this letter typed wrong :(
+                
                 break;
+            }
         }
         
         pb.setProgress(correct / (double)script.length()) ;
@@ -147,6 +170,13 @@ public class HomePageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader((new File("")).getAbsolutePath() + "/src/CurrentUser/userName.txt")) ;
+            userNameFiled.setText(reader.readLine()) ;  // shows the name of current user...
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+        
         text1.setFill(Color.GREEN);
         text2.setFill(Color.RED);
         typeArea.setEditable(false) ;
