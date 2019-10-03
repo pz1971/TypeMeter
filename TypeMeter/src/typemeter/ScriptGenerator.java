@@ -18,6 +18,9 @@ import java.util.Random;
 public class ScriptGenerator {
     public String generate(){
         int idx = (new Random()).nextInt(31);
+        idx *= (new Random()).nextInt(31) ;
+        idx += (new Random()).nextInt(31) ;
+        idx %= 31 ;
 
         String filePath = ( (new File("")).getAbsolutePath() + "/src/Scripts/" + Integer.toString(idx) + ".txt" );
 

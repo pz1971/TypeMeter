@@ -19,15 +19,20 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -40,6 +45,8 @@ public class HomePageController implements Initializable {
     /**
      * Initializes the controller class.
      */
+    
+    String projectLocation = (new File("")).getAbsolutePath() + "/src/" ;
     
     private static final int STARTTIME = 0;     // timer always starts from 0 seconds... okay?!
     private Timeline timeline;      // well, this is the timeline... um, that's it :D
@@ -75,7 +82,7 @@ public class HomePageController implements Initializable {
         // increment seconds
         int seconds = timeSeconds.get();
         timeSeconds.set(seconds+1);
-        if(timeSeconds.get() >= 180){
+        if(timeSeconds.get() >= 180){   // 3 minutes are more than enough, I think :)
             times_up() ;
         }
     }
@@ -185,12 +192,49 @@ public class HomePageController implements Initializable {
         }
     }
     
+    @FXML
+    Button aboutUsButton, howToButton, exitButton ;
+    
+    @FXML
+    public void exitButtonAction(ActionEvent event){
+        ((Stage) exitButton.getScene().getWindow()).close() ;
+    }
+    
+    @FXML
+    public void howToButtonAction(ActionEvent event){
+        try{
+            Stage st = new Stage();
+                    Parent root = FXMLLoader.load(getClass().getResource("HowToUse.fxml"));
+                    Scene sc = new Scene(root);
+                    st.setTitle("TypeMeter");
+                    st.getIcons().add(new Image("/Images/icon.png"));
+                    st.setScene(sc);
+                    st.show();
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+    }
+    
+    @FXML
+    public void aboutUsButtonAction(ActionEvent event){
+        try{
+            Stage st = new Stage();
+                    Parent root = FXMLLoader.load(getClass().getResource("AboutUs.fxml"));
+                    Scene sc = new Scene(root);
+                    st.setTitle("TypeMeter");
+                    st.getIcons().add(new Image("/Images/icon.png"));
+                    st.setScene(sc);
+                    st.show();
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         try{
-            BufferedReader reader = new BufferedReader(new FileReader((new File("")).getAbsolutePath() + "/src/CurrentUser/userName.txt")) ;
+            BufferedReader reader = new BufferedReader(new FileReader(projectLocation + "/CurrentUser/userName.txt")) ;
             userNameFiled.setText(reader.readLine()) ;  // shows the name of current user...
         }catch(Exception e){
             System.out.println(e.toString());
