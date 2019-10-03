@@ -8,7 +8,6 @@ package typemeter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
@@ -76,6 +75,9 @@ public class HomePageController implements Initializable {
         // increment seconds
         int seconds = timeSeconds.get();
         timeSeconds.set(seconds+1);
+        if(timeSeconds.get() >= 180){
+            times_up() ;
+        }
     }
     
     @FXML
@@ -127,6 +129,23 @@ public class HomePageController implements Initializable {
         
         pb.setProgress(1.0);    // 100% progress achieved :D
         correct = incorrect = 0;    // reset computation
+    }
+    
+    private void times_up(){
+        startTypingButton.setVisible(true);     // you can type again... :)
+        typeArea.setEditable(false) ;
+        
+        timeline.pause() ;  // pause the timeline :D
+        
+        speedField.setText("Speed(WPM):        " + 0);      // speed 0 ;
+        accuracyField.setText("Accuracy:        " + 0 + "%") ;
+        
+        script = "";        // all the text flows and script will be erased
+        text1.setText("");
+        text2.setText("\n\nYou took too much time! Please concentrate and try again.");
+        text3.setText("");
+        
+        pb.setProgress(0.0);
     }
     
     private void calculate(String typed){
