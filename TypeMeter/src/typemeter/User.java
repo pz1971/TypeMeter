@@ -26,6 +26,11 @@ public class User {
             BufferedWriter writer = new BufferedWriter(new FileWriter(pathToUser + "/" + user_name + "/password.txt"));
             writer.write(password);     // store the password
             writer.close();
+            writer = new BufferedWriter(new FileWriter(pathToUser + "/" + user_name + "/bestSpeed.txt"));
+            writer.write("0");        // initial best speed is 0
+            writer.close();
+            writer = new BufferedWriter(new FileWriter(pathToUser + "/" + user_name + "/history.txt")); // empty file to store histories
+            writer.close();
         }catch(IOException e){
             System.out.println(e.toString());
         }

@@ -68,5 +68,6 @@
             <Font size="15.0" />
          </font>
       </TextField>
+      <Label layoutX="747.0" layoutY="511.0" prefHeight="17.0" prefWidth="28.0" text="0.0.1" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
    </children>
 </AnchorPane>

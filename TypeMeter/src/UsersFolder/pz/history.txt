@@ -1,0 +1,4 @@
+Wed Oct 09 19:09:36 BDT 2019 , Speed = 61 WPM, Accuracy = 97%
+Wed Oct 09 19:06:03 BDT 2019 , Speed = 73 WPM, Accuracy = 99%
+Wed Oct 09 16:30:06 BDT 2019 , Speed = 56 WPM, Accuracy = 97%
+Wed Oct 09 16:28:59 BDT 2019 , Speed = 49 WPM, Accuracy = 96%

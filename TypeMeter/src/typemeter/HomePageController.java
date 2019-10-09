@@ -6,8 +6,10 @@
 package typemeter;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
@@ -102,7 +104,7 @@ public class HomePageController implements Initializable {
         pb.setProgress(0.0) ;       // 0% has been typed
         typeArea.setText("");
         
-        speedField.setText("Speed(WPM): ");
+        speedField.setText("Speed(WPM): "); // default texts
         accuracyField.setText("Accuracy: ") ;
         
         // reset the timer
@@ -126,8 +128,16 @@ public class HomePageController implements Initializable {
             }
         }
         
-        speedField.setText("Speed(WPM):        " + Integer.toString((int)Math.round(((double)script.length() / 4.7) / ( timeSeconds.get() / 60.0 ) )));
-        accuracyField.setText("Accuracy:        " + Integer.toString((int)Math.round(100.0 - ( (double)mistake / (double)script.length() * 100.0 ) )) + "%") ;
+        int speed = (int)Math.round(((double)script.length() / 4.7) / ( timeSeconds.get() / 60.0 ) ) ;  // speed in wpm
+        int accuracy = (int)Math.round(100.0 - ( (double)mistake / (double)script.length() * 100.0 ) ) ;    // accuracy out of 100%
+        
+        speedField.setText("Speed(WPM):        " + Integer.toString(speed));
+        accuracyField.setText("Accuracy:        " + Integer.toString(accuracy) + "%") ;
+        
+        java.util.Date date=new java.util.Date();  // Current date and time
+        String dateAndTime = date.toString() ;  // converting to string
+        
+        updateUserProfile(speed, accuracy, dateAndTime) ; // update the profile of the user
         
         script = "";        // all the text flows and script will be erased
         text1.setText("");
@@ -138,6 +148,39 @@ public class HomePageController implements Initializable {
         correct = incorrect = 0;    // reset computation
     }
     
+    private void updateUserProfile(final int speed, final int accuracy, final String dateAndTime){
+        String currentUserName ;
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(projectLocation + "/CurrentUser/userName.txt")) ;
+            currentUserName = reader.readLine() ;       // getting the name of current User
+            reader.close() ;
+            
+            reader = new BufferedReader(new FileReader(projectLocation + "/UsersFolder/" + currentUserName + "/history.txt")) ;
+            String temp = "", line ;
+            while((line = reader.readLine()) != null){  // getting all previous history
+                temp = temp + line + "\n" ;
+            }
+            reader.close() ;
+            
+            BufferedWriter writer = new BufferedWriter(new FileWriter(projectLocation + "/UsersFolder/" + currentUserName + "/history.txt")) ;
+            writer.write(dateAndTime + " , Speed = " + speed + " WPM, Accuracy = " + accuracy + "%\n" + temp) ; // places the new performance at the top of the history
+            writer.close() ;
+            
+            reader = new BufferedReader(new FileReader(projectLocation + "/UsersFolder/" + currentUserName + "/bestSpeed.txt")) ;
+            int best = Integer.parseInt(reader.readLine()) ;
+            reader.close() ;
+            
+            if(best < speed)    // new speed is the best
+                best = speed ;
+            
+            writer = new BufferedWriter(new FileWriter(projectLocation + "/UsersFolder/" + currentUserName + "/bestSpeed.txt")) ;
+            writer.write(Integer.toString(best)) ;   // updating the best...
+            writer.close() ;
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+    }
+    
     private void times_up(){
         startTypingButton.setVisible(true);     // you can type again... :)
         typeArea.setEditable(false) ;
@@ -145,20 +188,20 @@ public class HomePageController implements Initializable {
         timeline.pause() ;  // pause the timeline :D
         
         speedField.setText("Speed(WPM):        " + 0);      // speed 0 ;
-        accuracyField.setText("Accuracy:        " + 0 + "%") ;
+        accuracyField.setText("Accuracy:        " + 0 + "%") ;  // accuracy 0 ;
         
         script = "";        // all the text flows and script will be erased
         text1.setText("");
         text2.setText("\n\nYou took too much time! Please concentrate and try again.");
         text3.setText("");
         
-        pb.setProgress(0.0);
+        pb.setProgress(0.0);    // reset progress bar
     }
     
     private void calculate(String typed){
         correct = 0;
         for(int i=0; i<typed.length(); i++){
-            if(script.charAt(i) == typed.charAt(i)){
+            if(script.charAt(i) == typed.charAt(i)){    // typed correctly
                 correct++;
             }
             else{
@@ -168,14 +211,14 @@ public class HomePageController implements Initializable {
             }
         }
         
-        pb.setProgress(correct / (double)script.length()) ;
+        pb.setProgress(correct / (double)script.length()) ; // update progress bar
         incorrect = typed.length() - correct;
     }
     
     private void i_am_typing(){
         String typed = typeArea.getText();
         
-        if(typed.equals(script)){
+        if(typed.equals(script)){   // completed typing
             endOfScript();
         }
         else{
@@ -183,7 +226,7 @@ public class HomePageController implements Initializable {
                 typeArea.setText(typed.substring(0, script.length())) ;     // can't type more than required... :)
             }
             else{
-                calculate(typed);
+                calculate(typed);   
                 
                 text1.setText(script.substring(0, correct)) ;
                 text2.setText(script.substring(correct, correct + incorrect));
@@ -192,6 +235,7 @@ public class HomePageController implements Initializable {
         }
     }
     
+    // option section
     @FXML
     Button aboutUsButton, howToButton, exitButton ;
     
@@ -204,12 +248,12 @@ public class HomePageController implements Initializable {
     public void howToButtonAction(ActionEvent event){
         try{
             Stage st = new Stage();
-                    Parent root = FXMLLoader.load(getClass().getResource("HowToUse.fxml"));
-                    Scene sc = new Scene(root);
-                    st.setTitle("TypeMeter");
-                    st.getIcons().add(new Image("/Images/icon.png"));
-                    st.setScene(sc);
-                    st.show();
+            Parent root = FXMLLoader.load(getClass().getResource("HowToUse.fxml"));
+            Scene sc = new Scene(root);
+            st.setTitle("TypeMeter");
+            st.getIcons().add(new Image("/Images/icon.png"));
+            st.setScene(sc);
+            st.show();
         }catch(Exception e){
             System.out.println(e.toString());
         }
@@ -219,7 +263,93 @@ public class HomePageController implements Initializable {
     public void aboutUsButtonAction(ActionEvent event){
         try{
             Stage st = new Stage();
-                    Parent root = FXMLLoader.load(getClass().getResource("AboutUs.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("AboutUs.fxml"));
+            Scene sc = new Scene(root);
+            st.setTitle("TypeMeter");
+            st.getIcons().add(new Image("/Images/icon.png"));
+            st.setScene(sc);
+            st.show();
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+    }
+    
+    // switch user
+    Button switchUserButton ;
+    // profile section
+    public void switchUserButtonButtonAction(ActionEvent event){
+        try{        // opens login page
+            Stage st = new Stage();
+            Parent root = FXMLLoader.load(getClass().getResource("LoginPage.fxml"));
+            Scene sc = new Scene(root);
+            st.setTitle("TypeMeter");
+            st.getIcons().add(new Image("/Images/icon.png"));
+            st.setScene(sc);
+            st.show();
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+        
+        exitButtonAction(event) ;   // closes the current window calling exit button action
+    }
+    
+    @FXML
+    Button refreshButton, historyButton, addScriptButton ;
+    @FXML
+    Label profAvgSpeed, profAccuracy, profBestSpeed ;
+    @FXML
+    public void refreshButtonAction(ActionEvent event){
+        try{
+            // getting the name of current user
+            BufferedReader reader = new BufferedReader(new FileReader(projectLocation + "/CurrentUser/userName.txt")) ;
+            String currentUserName = reader.readLine() ;       // getting the name of current User
+            reader.close() ;
+            // reading the best speed of current user
+            reader = new BufferedReader(new FileReader(projectLocation + "UsersFolder/" + currentUserName + "/bestSpeed.txt")) ;
+            profBestSpeed.setText(Integer.parseInt(reader.readLine()) + " WPM");    // ready to show
+            reader.close() ;
+            // processing the avg speed and accuracy...
+            
+            int speed = 0, accuracy = 0, n = 0 ;
+            
+            reader = new BufferedReader(new FileReader(projectLocation + "UsersFolder/" + currentUserName + "/history.txt")) ;
+            String line ;
+            
+            while((line = reader.readLine()) != null){
+                String str = line.substring(39, 40) ;
+                if(line.charAt(40) != ' '){
+                    str = str + line.substring(40, 41) ;
+                    if(line.charAt(41) != ' ')
+                        str = str + line.substring(41, 42) ;                    
+                }
+                
+                speed += Integer.parseInt(str) ;
+                
+                str = line.substring(58,59) ;
+                if(line.charAt(59) != '%'){
+                    str = str + line.substring(59, 60) ;
+                    if(line.charAt(60) != '%')
+                        str = str + line.substring(60, 61) ;
+                }
+                
+                accuracy += Integer.parseInt(str) ;
+                
+                n++ ;
+                if(n == 10)
+                    break ;
+            }
+            
+            profAvgSpeed.setText(Math.round((double)speed / (double) n) + " WPM") ;
+            profAccuracy.setText(Math.round((double)accuracy / (double) n) + " %") ;
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+    }
+    @FXML
+    public void historyButtonAction(ActionEvent event){     // opens a new window to show the previous records
+        try{
+            Stage st = new Stage();
+                    Parent root = FXMLLoader.load(getClass().getResource("UserHistory.fxml"));
                     Scene sc = new Scene(root);
                     st.setTitle("TypeMeter");
                     st.getIcons().add(new Image("/Images/icon.png"));
@@ -228,6 +358,10 @@ public class HomePageController implements Initializable {
         }catch(Exception e){
             System.out.println(e.toString());
         }
+    }
+    @FXML
+    public void addScriptButtonAction(ActionEvent event){
+        
     }
     
     @Override
@@ -240,7 +374,7 @@ public class HomePageController implements Initializable {
             System.out.println(e.toString());
         }
         
-        text1.setFill(Color.GREEN);
+        text1.setFill(Color.GREEN); 
         text2.setFill(Color.RED);
         typeArea.setEditable(false) ;
         
