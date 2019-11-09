@@ -294,7 +294,7 @@ public class HomePageController implements Initializable {
     }
     
     @FXML
-    Button refreshButton, historyButton, addScriptButton ;
+    Button refreshButton, historyButton ;
     @FXML
     Label profAvgSpeed, profAccuracy, profBestSpeed ;
     @FXML
@@ -358,10 +358,6 @@ public class HomePageController implements Initializable {
         }catch(Exception e){
             System.out.println(e.toString());
         }
-    }
-    @FXML
-    public void addScriptButtonAction(ActionEvent event){
-        
     }
     
     @Override
